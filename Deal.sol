@@ -7,14 +7,13 @@ address public buyer;
 
 uint timer = 30;
 
-uint countdown;
-
 struct Order {
     string game;
     uint price;
     uint date;
 
     bool paid;
+    uint refundDeadline;
 }
 
 mapping (uint => Order) orders;
@@ -25,7 +24,8 @@ event PaymentReceived (address buyer, uint orderno, uint price, uint time);
 event CountdownStarted (uint orderno, uint start, uint end);
 event CountdownEnded (uint orderno, uint time);
 event RefundSuccessful (uint orderno, address buyer, uint time);
-event OrderSuccessful (address buyer, uint orderno, uint time);
+event PayoutSuccessful (uint orderno, address creator, uint amount, uint time);
+event OrderSuccessful (uint orderno, uint time);
 
 constructor (address _buyerAddr) payable {
     
@@ -38,13 +38,13 @@ constructor (address _buyerAddr) payable {
 function sendOrder(string calldata game) payable external  {
     
     /// Accept orders just from buyer
-    require(msg.sender == buyer, "Only buyer can refund");
+    require(msg.sender == buyer, "Only buyer can send an order");
 
     /// Increment the order sequence
     orderseq++;
 
     /// Create the order register
-    orders[orderseq] = Order(game, 0, block.timestamp, false);
+    orders[orderseq] = Order(game, 0, block.timestamp, false, 0);
 
     /// Trigger the event
     emit OrderSent(msg.sender, game, orderseq);
@@ -61,7 +61,7 @@ function sendOrder(string calldata game) payable external  {
 
     emit PaymentReceived(msg.sender, orderno, msg.value, block.timestamp);
 
-    countdown = block.timestamp + timer;
+    orders[orderno].refundDeadline = block.timestamp + timer;
 
     emit CountdownStarted(orderno, block.timestamp, timer);
   }
@@ -70,6 +70,7 @@ function sendOrder(string calldata game) payable external  {
 
     require(msg.sender == buyer, "Only buyer can refund");
     require(orders[orderno].paid, "Order not paid");
+    require(orders[orderno].refundDeadline >= block.timestamp, "Cannot refund after the deadline");
 
     uint amount = orders[orderno].price;
     orders[orderno].paid = false;
@@ -78,8 +79,21 @@ function sendOrder(string calldata game) payable external  {
     require(success, "Refund failed");
 
     emit RefundSuccessful(orderno, buyer, block.timestamp);
-}
+  }
 
+  function Payout(uint orderno) payable public {
 
+    require(msg.sender == creator, "Only creator can get the payout");
+    require(orders[orderno].paid, "Order must be paid in order to receive the payout");
+    require(orders[orderno].refundDeadline <= block.timestamp, "Cannot receive the payout before the deadline");
 
+    uint amount = orders[orderno].price;
+    orders[orderno].paid = false;
+
+    (bool success, ) = payable(creator).call{value: amount}("");
+    require(success, "Payout failed");
+
+    emit PayoutSuccessful(orderno, creator, amount, block.timestamp);
+    emit OrderSuccessful(orderno, block.timestamp);
+  }
 }
