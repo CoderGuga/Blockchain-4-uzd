@@ -9,11 +9,11 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_buyerAddr",
+						"name": "buyerAddr",
 						"type": "address"
 					}
 				],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
 			{
@@ -58,6 +58,37 @@
 					}
 				],
 				"name": "CountdownStarted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "game",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "orderno",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					}
+				],
+				"name": "OrderConfirmed",
 				"type": "event"
 			},
 			{
@@ -197,11 +228,29 @@
 						"internalType": "uint256",
 						"name": "orderno",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
+				"name": "ConfirmOrder",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orderno",
+						"type": "uint256"
 					}
 				],
 				"name": "Payout",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -214,7 +263,7 @@
 				],
 				"name": "ReturnProduct",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -266,7 +315,7 @@
 				],
 				"name": "sendOrder",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -298,10 +347,10 @@
 	},
 	"sources": {
 		"Deal.sol": {
-			"keccak256": "0xead11b62f477cc4cbf241bfc6f8806bf520365ad07d50d53fbfc40f5d3abcdd0",
+			"keccak256": "0x23ba57a41184763802b5f4ef54a04a3a83715d18064c3102dc24a948c9e6e5ca",
 			"urls": [
-				"bzz-raw://99b7346392eafeabf424e09c7cd16b0631dcb46ae9a45b1d76539f9fa8b7bbc6",
-				"dweb:/ipfs/QmXvBkDxprRk62S9sQTr5BcqZmbtxMfS73CHWBCpac85Qf"
+				"bzz-raw://5bf463e3728ca8271e0fffdd596679d514c71124bef02ef8e34b4e81c6f90318",
+				"dweb:/ipfs/QmeM7kdPWeXqzycHnL5eXv5vjNgrQnnbufqT3oPF9N88kj"
 			]
 		}
 	},

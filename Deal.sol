@@ -54,7 +54,9 @@ function sendOrder(string calldata game) external  {
 
   function ConfirmOrder(uint orderno, uint price) public {
 
-    require(msg.sender == creator, "Only buyer can send an order");
+    require(msg.sender == creator, "Only creator can confirm an order");
+
+    require(bytes(orders[orderno].game).length != 0, "Order does not exist");
 
     orders[orderno].price = price;
     orders[orderno].confirmed = true;
@@ -65,7 +67,7 @@ function sendOrder(string calldata game) external  {
   function SendPayment(uint orderno) payable public {
 
     /// Just the buyer can make safepay
-    require(buyer == msg.sender, "Only buyer can refund");
+    require(buyer == msg.sender, "Only buyer can send a payment");
 
     require(orders[orderno].confirmed == true, "Order must be confirmed by the creator in order to be paid");
 
@@ -79,7 +81,7 @@ function sendOrder(string calldata game) external  {
 
     orders[orderno].refundDeadline = block.timestamp + timer;
 
-    emit CountdownStarted(orderno, block.timestamp, timer);
+    emit CountdownStarted(orderno, block.timestamp, block.timestamp + timer);
   }
 
   function ReturnProduct(uint orderno) public {
