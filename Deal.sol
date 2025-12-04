@@ -12,6 +12,7 @@ struct Order {
     uint price;
     uint date;
 
+    bool confirmed;
     bool paid;
     uint refundDeadline;
 }
@@ -20,6 +21,7 @@ mapping (uint => Order) orders;
 uint orderseq;
 
 event OrderSent (address buyer, string game, uint orderno);
+event OrderConfirmed (string game, uint price, uint orderno, uint time);
 event PaymentReceived (address buyer, uint orderno, uint price, uint time);
 event CountdownStarted (uint orderno, uint start, uint end);
 event CountdownEnded (uint orderno, uint time);
@@ -27,15 +29,15 @@ event RefundSuccessful (uint orderno, address buyer, uint time);
 event PayoutSuccessful (uint orderno, address creator, uint amount, uint time);
 event OrderSuccessful (uint orderno, uint time);
 
-constructor (address _buyerAddr) payable {
+constructor (address buyerAddr) {
     
     /// The seller is the contract's owner
     creator = msg.sender;
 
-    buyer = _buyerAddr;
+    buyer = buyerAddr;
   }
 
-function sendOrder(string calldata game) payable external  {
+function sendOrder(string calldata game) external  {
     
     /// Accept orders just from buyer
     require(msg.sender == buyer, "Only buyer can send an order");
@@ -44,16 +46,30 @@ function sendOrder(string calldata game) payable external  {
     orderseq++;
 
     /// Create the order register
-    orders[orderseq] = Order(game, 0, block.timestamp, false, 0);
+    orders[orderseq] = Order(game, 0, block.timestamp, false, false, 0);
 
     /// Trigger the event
     emit OrderSent(msg.sender, game, orderseq);
+  }
+
+  function ConfirmOrder(uint orderno, uint price) public {
+
+    require(msg.sender == creator, "Only buyer can send an order");
+
+    orders[orderno].price = price;
+    orders[orderno].confirmed = true;
+
+    emit OrderConfirmed(orders[orderno].game, price, orderno, block.timestamp);
   }
 
   function SendPayment(uint orderno) payable public {
 
     /// Just the buyer can make safepay
     require(buyer == msg.sender, "Only buyer can refund");
+
+    require(orders[orderno].confirmed == true, "Order must be confirmed by the creator in order to be paid");
+
+    require(orders[orderno].paid == false, "Order was already paid for");
 
     require(orders[orderno].price == msg.value, "Send the exact price");
 
@@ -66,7 +82,7 @@ function sendOrder(string calldata game) payable external  {
     emit CountdownStarted(orderno, block.timestamp, timer);
   }
 
-  function ReturnProduct(uint orderno) payable public {
+  function ReturnProduct(uint orderno) public {
 
     require(msg.sender == buyer, "Only buyer can refund");
     require(orders[orderno].paid, "Order not paid");
@@ -81,7 +97,7 @@ function sendOrder(string calldata game) payable external  {
     emit RefundSuccessful(orderno, buyer, block.timestamp);
   }
 
-  function Payout(uint orderno) payable public {
+  function Payout(uint orderno) public {
 
     require(msg.sender == creator, "Only creator can get the payout");
     require(orders[orderno].paid, "Order must be paid in order to receive the payout");
