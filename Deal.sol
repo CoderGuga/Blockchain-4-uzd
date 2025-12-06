@@ -1,4 +1,4 @@
-pragma solidity ^0.8.30;
+pragma solidity ^0.4.18;
 
 contract Deal {
 
@@ -29,7 +29,7 @@ event RefundSuccessful (uint orderno, address buyer, uint time);
 event PayoutSuccessful (uint orderno, address creator, uint amount, uint time);
 event OrderSuccessful (uint orderno, uint time);
 
-constructor (address buyerAddr) {
+function Deal (address buyerAddr) public {
     
     /// The seller is the contract's owner
     creator = msg.sender;
@@ -37,7 +37,7 @@ constructor (address buyerAddr) {
     buyer = buyerAddr;
   }
 
-function sendOrder(string calldata game) external  {
+function sendOrder(string game) external  {
     
     /// Accept orders just from buyer
     require(msg.sender == buyer, "Only buyer can send an order");
@@ -93,8 +93,8 @@ function sendOrder(string calldata game) external  {
     uint amount = orders[orderno].price;
     orders[orderno].paid = false;
 
-    (bool success, ) = payable(buyer).call{value: amount}("");
-    require(success, "Refund failed");
+    buyer.transfer(amount);
+
 
     emit RefundSuccessful(orderno, buyer, block.timestamp);
   }
@@ -108,8 +108,8 @@ function sendOrder(string calldata game) external  {
     uint amount = orders[orderno].price;
     orders[orderno].paid = false;
 
-    (bool success, ) = payable(creator).call{value: amount}("");
-    require(success, "Payout failed");
+    creator.transfer(amount);
+
 
     emit PayoutSuccessful(orderno, creator, amount, block.timestamp);
     emit OrderSuccessful(orderno, block.timestamp);
