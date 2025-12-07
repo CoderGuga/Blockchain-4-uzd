@@ -8,13 +8,13 @@ Kontrakto modelis
 3. Kūrėjas patvirtina užsakymą, išreikšdamas norimą kainą
 4. Jei pirkėjas sutinka su kaina, jis gali išsiųsti į kontraktą pinigus
 5. Nuo pinigų išsiuntimo momento, yra pradedamas fiksuotas pinigų atsimėmo laikotarpis
-6. Kūrėjas išsiunčia prekę*
+6. Kūrėjas išsiunčia prekę (1)
 7a. Jei pirkėjas nėra patenkintas preke, jis gali susigrąžinti pinigus per fiksuotą laikotarpį
 8a. Pinigai yra sugrąžinami atgal pirkėjui
 7b. Jei pirkėjas per duotą laikotarpį nesusgrąžina pinigų, susigrąžinimo galimybė yra nutraukiama ir pinigai tampa prieinami atsiimti kūrėjui
 8b. Pasibaigus laikotarpiui, kūrėjas gali bet kada paprašyti kontrakto, jog pinigai būtų pervesti į jo sąskaitą
 9b. Pinigai iš kontrakto yra pervedami kūrėjui į sąskaitą
 
-* Yra neįmanoma sekti prekės per kontraktą, todėl yra siūloma naudoti paslaugą, kuri leistų prieti prie prekės tik tuo atveju, jei kontraktas yra apmokėtas.
+(1) Yra neįmanoma sekti prekės per kontraktą, todėl yra siūloma naudoti paslaugą, kuri leistų prieti prie prekės tik tuo atveju, jei kontraktas yra apmokėtas.
 
 Šis kontraktas geriausiai tiktų užtikrinti saugų pinigų pervedimą tarp elektroninių prekių/paslaugų kūrėjo ir įprastinio pirkėjo. Jis duoda pinigų grąžinimo laikotarpį, todėl pirkėjas niekada nebus apgautas ir panaikina per vidury esantį banką, ar kitą už atsiskaitymus atsakingą asmenį. Kaip minėta, šis kontraktas geriausiai tinka elektroninėms prekėms, kurios galėtų veikti priklausomai, nuo kontrakto būsenos, kadangi nėra įmanoma užtikrinti, jog pirkėjas grąžins prekę atsiėmęs pinigus.
