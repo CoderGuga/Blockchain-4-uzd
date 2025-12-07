@@ -20,9 +20,9 @@ struct Order {
 mapping (uint => Order) orders;
 uint orderseq;
 
-event OrderSent (address buyer, string game, uint orderno);
+event OrderSent (string game, uint orderno, uint time);
 event OrderConfirmed (string game, uint price, uint orderno, uint time);
-event PaymentReceived (address buyer, uint orderno, uint price, uint time);
+event PaymentReceived (uint orderno, uint price, uint time);
 event CountdownStarted (uint orderno, uint start, uint end);
 event CountdownEnded (uint orderno, uint time);
 event RefundSuccessful (uint orderno, address buyer, uint time);
@@ -49,7 +49,7 @@ function sendOrder(string game) external  {
     orders[orderseq] = Order(game, 0, block.timestamp, false, false, 0);
 
     /// Trigger the event
-    emit OrderSent(msg.sender, game, orderseq);
+    emit OrderSent(game, orderseq, block.timestamp);
   }
 
   function ConfirmOrder(uint orderno, uint price) public {
@@ -77,7 +77,7 @@ function sendOrder(string game) external  {
 
     orders[orderno].paid = true;
 
-    emit PaymentReceived(msg.sender, orderno, msg.value, block.timestamp);
+    emit PaymentReceived(orderno, msg.value, block.timestamp);
 
     orders[orderno].refundDeadline = block.timestamp + timer;
 
@@ -114,4 +114,27 @@ function sendOrder(string game) external  {
     emit PayoutSuccessful(orderno, creator, amount, block.timestamp);
     emit OrderSuccessful(orderno, block.timestamp);
   }
+
+  function getName(uint orderno) public view returns (string) {
+    return orders[orderno].game;
+}
+
+  function getPrice(uint orderno) public view returns (uint) {
+    return orders[orderno].price;
+}
+
+function getRefundWindow(uint orderno) public view returns (uint) {
+    Order storage o = orders[orderno];
+
+    if (!o.paid) {
+        return 0; // or return a sentinel value you choose
+    }
+
+    if (block.timestamp >= o.refundDeadline) {
+        return 0; // no time left
+    }
+
+    return o.refundDeadline - block.timestamp;
+}
+
 }
