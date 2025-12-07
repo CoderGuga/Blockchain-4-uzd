@@ -16,3 +16,5 @@ Kontrakto modelis
 9b. Pinigai iš kontrakto yra pervedami kūrėjui į sąskaitą
 
 * Yra neįmanoma sekti prekės per kontraktą, todėl yra siūloma naudoti paslaugą, kuri leistų prieti prie prekės tik tuo atveju, jei kontraktas yra apmokėtas.
+
+Šis kontraktas geriausiai tiktų užtikrinti saugų pinigų pervedimą tarp elektroninių prekių/paslaugų kūrėjo ir įprastinio pirkėjo. Jis duoda pinigų grąžinimo laikotarpį, todėl pirkėjas niekada nebus apgautas ir panaikina per vidury esantį banką, ar kitą už atsiskaitymus atsakingą asmenį. Kaip minėta, šis kontraktas geriausiai tinka elektroninėms prekėms, kurios galėtų veikti priklausomai, nuo kontrakto būsenos, kadangi nėra įmanoma užtikrinti, jog pirkėjas grąžins prekę atsiėmęs pinigus.
